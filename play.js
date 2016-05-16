@@ -32,39 +32,24 @@ window.onload = function() {
     function up(e) {
         pos._x = e.offsetX;
         pos._y = e.offsetY;
-        console.log(pos.x, pos.y);
-        console.log(pos._x, pos._y);
 
         if(Math.abs(pos.x - pos._x) > 10 && Math.abs(pos.y - pos._y)) {
-
             var img = document.getElementsByTagName("img")[0];
-
-            //var image = new Image();
-            //image.src = $("#old").attr("src");
-
-            var sPos = getPointOnCanvas(canvas, pos.x, pos.y),
-                ePos = getPointOnCanvas(canvas, pos._x, pos._y);
-
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
             ctx.save();
+            console.log(pos);
+
             /**********************/
             ctx.beginPath();
-            ctx.rect(sPos.x, sPos.y, ePos.x, ePos.y);
+            ctx.rect(pos.x, pos.y, Math.abs(pos._x - pos.x), Math.abs(pos._y - pos.y));
             ctx.clip();
             /**********************/
             ctx.drawImage(img, 0, 0);
             ctx.restore();
-
-
-
-            saveImage(canvas, 'screen_' + new Date().getTime() + '.png');
-
+            //saveImage(canvas, 'screen_' + new Date().getTime() + '.png');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
     }
-
-
 
     function saveImage (canvas, filename) {
         var image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
@@ -81,18 +66,4 @@ window.onload = function() {
         event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
         save_link.dispatchEvent(event);
     }
-
-
-    function getPointOnCanvas(canvas, x, y) {
-
-       var box = canvas.getBoundingClientRect();
-
-       return { x: x - box.left *(canvas.width / box.width),
-
-           y: y - box.top  * (canvas.height / box.height)
-
-       };
-
-    }
-
 };
