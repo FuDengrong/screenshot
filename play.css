@@ -8,28 +8,31 @@
 html, body {
 	width: 100%;
     height: 500px;
+    overflow: hidden;
 }
 .horizontal {
 	display: flex;
 	flex-flow: row nowrap;
 }
 .horizontal > div {
-	width: 48%;
+	width: 550px;
 }
 .cut {
 	position: relative;
 }
 .cut img {
-	width: 100%;
-	height:100%;
+	width: 540px;
+	height: 350px;
 	position: absolute;
 	left: 0;
 	top: 0;
+	-webkit-user-select: none;
 }
 .cut canvas {
 	position: absolute;
 	left: 0;
 	top: 0;
+    -webkit-user-select: none;
 }
 .img {
 	border: 1px solid red;

@@ -9,12 +9,16 @@
 </head>
 <body class="horizontal">
     <div class="cut">
-        <img id="old" src="imgscroll-1.jpg" alt="" style="-webkit-filter: blur(2);">
+        <video controls>
+            <source src="d.mp4" type="video/mp4">
+            <!--<source src="movie.ogg" type="video/ogg">-->
+            您的浏览器不支持Video标签。
+        </video>
         <canvas id="canvas"></canvas>
     </div>
-    <!--<div class="img">-->
-        <!--<img id="showimg" src="" alt="">-->
-    <!--</div>-->
+    <div id="img">
+        <img id="showimg">
+    </div>
     <script src="play.js"></script>
 </body>
 </html>
