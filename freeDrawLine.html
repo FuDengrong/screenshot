@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Examples</title>
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<link href="" rel="stylesheet">
+	<style>
+		html, body {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+		body{
+			background: #dfdfdf;
+		}
+		canvas{
+			background: #f3de9a;
+		}
+		h3{
+			color: #000;
+		}
+	</style>
+</head>
+<body>
+	<div class="box">
+        <h1>鼠标画线</h1>
+        <canvas id="target" width="400" height="300"></canvas>
+	</div>
+	<script language="javascript">
+		var Canvas = function () {
+			var canvas = document.getElementById('target'),
+				ctx = canvas.getContext('2d'),
+				num = 0,
+				init = function () {
+					drawLine();
+				},
+				drawLine = function () {
+					canvas.onmousedown = function (e) {
+						var ev = e || window.event,
+								_this = this,
+								o_left = _this.offsetLeft,
+								o_top = _this.offsetTop;
+
+						ctx.moveTo(ev.clientX - o_left, ev.clientY - o_top);
+						document.onmousemove = function (e) {
+							var ev = e || window.event;
+							ctx.lineTo(ev.clientX - o_left, ev.clientY - o_top);
+							ctx.stroke();
+						};
+						document.onmouseup = function () {
+							document.onmousedown = null;
+							document.onmousemove = null;
+						}
+					}
+				};
+			return {
+				init: init
+			}
+		}();
+		Canvas.init();
+	</script>
+</body>
+</html>
