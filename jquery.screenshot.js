@@ -17,7 +17,7 @@
         root.core = core;
     }
 })(this, function () {
-    $.fn.screenshot = function (targetID, previewBoxID) {
+    $.fn.screenshot = function (targetID, previewBoxID, save) {
         $(window).resize(calcWH);
         var w, h, canvas, ctx, self = this, shotCanvas;
         function calcWH() {
@@ -32,15 +32,10 @@
                 $('<canvas id="shot-canvas"></canvas>').css({position: "absolute", left: "0", top: "0", zIndex: "99"})
             );
             shotCanvas = self.find("canvas#shot-canvas");
-
             canvas = shotCanvas.get(0);
             canvas.width = w;
             canvas.height = h;
             ctx = canvas.getContext('2d');
-            //ctx.clearRect(0, 0, w, h);
-            //ctx.drawImage(document.getElementById(targetID), 0, 0, w, h);
-
-            //ctx.drawImage(document.getElementsByTagName(targetID)[0], 0, 0, w, h);
             shotCanvas.on("mousedown", down).on("mouseup", up);
         }
 
@@ -101,25 +96,22 @@
             }
 
             if(drawWidth > 10 && drawHeight > 10) {
-                var pic = document.getElementById(targetID);
-
-
-
-                $("#" + previewBoxID).find("canvas#pre-canvas").remove();
-                /**
-                 * 创建预览canvas
-                 * @type {Element}
-                 */
-                var preCanvas = document.createElement("canvas");
-                preCanvas.setAttribute("id", "pre-canvas");
-                preCanvas.width = 100;
-                preCanvas.height = (drawHeight / drawWidth) * 100;
-                var _ctx = preCanvas.getContext('2d');
-                _ctx.clearRect(0, 0, preCanvas.width, preCanvas.height);
-                _ctx.drawImage(pic, startX, startY, drawWidth, drawHeight, 0, 0, preCanvas.width, preCanvas.height);
-
-                //console.log(preCanvas.toDataURL());
-                $("#showimg").attr("src", preCanvas.toDataURL());
+                var pic = $(targetID).get(0);
+                if(previewBoxID && previewBoxID !== "" && typeof previewBoxID == 'string') {
+                    $(previewBoxID).find("canvas#pre-canvas").remove();
+                    /**
+                     * 创建预览canvas
+                     * @type {Element}
+                     */
+                    var preCanvas = document.createElement("canvas");
+                    preCanvas.setAttribute("id", "pre-canvas");
+                    preCanvas.width = 100;
+                    preCanvas.height = (drawHeight / drawWidth) * 100;
+                    var _ctx = preCanvas.getContext('2d');
+                    _ctx.clearRect(0, 0, preCanvas.width, preCanvas.height);
+                    _ctx.drawImage(pic, startX, startY, drawWidth, drawHeight, 0, 0, preCanvas.width, preCanvas.height);
+                    $(previewBoxID).append(preCanvas);
+                }
 
                 /**
                  * 清除绘制框
@@ -127,25 +119,40 @@
                 setTimeout(function() {
                     ctx.clearRect(0, 0, w, h);
                 }, 300);
+                if(save || save === "true") {
+                    var saveCanvas = document.createElement("canvas");
+                    saveCanvas.setAttribute("id", "pre-canvas");
+                    saveCanvas.width = drawWidth;
+                    saveCanvas.height = drawHeight;
+                    var saveCtx = saveCanvas.getContext('2d');
+                    saveCtx.clearRect(0, 0, saveCanvas.width, saveCanvas.height);
+                    saveCtx.drawImage(pic, startX, startY, drawWidth, drawHeight, 0, 0, saveCanvas.width, saveCanvas.height);
+                    saveImage(saveCanvas, 'screen_' + new Date().getTime() + '.png');
+                }
             }
         }
 
-        function saveImage (canvas, filename) {
-            var image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+        function saveImage (canvas, name) {
+            var img = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
             $(".img").append($("#showimg").attr("backgroundImage", 'url(' + canvas.toDataURL() + ')'));
-            saveFile(image, filename || 'file_' + new Date().getTime() + '.png');
+            saveFile(img, name || 'file_' + new Date().getTime() + '.png');
         }
 
-        function saveFile(data, filename) {
+        function saveFile(img, name) {
             var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
-            save_link.href = data;
-            save_link.download = filename;
-
+            save_link.href = img;
+            save_link.download = name;
             var event = document.createEvent('MouseEvents');
             event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
             save_link.dispatchEvent(event);
         }
 
+        /**
+         * 获取图片原始大小
+         * @param tar
+         * @param callback
+         * @returns {{w: *, h: *}}
+         */
         function getImgNaturalDimensions(tar, callback) {
             var nWidth, nHeight;
             if (tar.naturalWidth) {
@@ -163,6 +170,12 @@
             }
         }
 
+        /**
+         * 获取当前样式
+         * @param tar
+         * @param name
+         * @returns {*}
+         */
         function getStyle(tar, name) {
             if(window.getComputedStyle) {
                 return window.getComputedStyle(tar, null);

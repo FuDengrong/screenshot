@@ -26,12 +26,11 @@
         <img id="target" draggable="false" style="width:100%;height: 350px;" src="imgscroll.png" alt="">
     </div>
     <div id="show" class="flex" style="height: 300px;outline: 1px solid #5c5c5c">
-        <img id="showimg" src="" alt="">
     </div>
     <script src="jquery.screenshot.min.js"></script>
     <script>
         window.onload = function() {
-            $("#box").screenshot("target", "show");
+            $("#box").screenshot("#target", "#show", true);
         }
     </script>
 </body>
