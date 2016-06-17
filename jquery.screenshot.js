@@ -51,25 +51,29 @@
                 rectangleW = Math.abs(ev.offsetX - pos.x),
                 rectangleH = Math.abs(ev.offsetY - pos.y);
             /**
-             * 反向框选
-             * @type {number}
+             * 绘制目标路径
              */
-            //var sx = pos.x, sy = pos.y;
-            //if(ev.offsetX > pos.x || ev.offsetY > pos.y) {
-            //    sx = ev.offsetX;
-            //    sy = ev.offsetY;
-            //}
-
-            //**
-            // * 绘制目标路径
-            // */
-            ctx.clearRect(0, 0, w, h);
-            ctx.save();
-            ctx.beginPath();
-            ctx.strokeStyle = '#0000ff';
-            //ctx.strokeRect(sx, sy, rectangleW, rectangleH);
-            ctx.strokeRect( pos.x,  pos.y, rectangleW, rectangleH);
-            ctx.restore();
+            if(ev.offsetX > pos.x || ev.offsetY > pos.y) {
+                ctx.clearRect(0, 0, w, h);
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = '#0000ff';
+                ctx.strokeRect( pos.x,  pos.y, rectangleW, rectangleH);
+                ctx.restore();
+            }else {
+                /**
+                 * 反向绘制
+                 */
+                ctx.clearRect(0, 0, w, h);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+                ctx.lineTo(pos.x - rectangleW, pos.y);
+                ctx.lineTo(ev.offsetX, ev.offsetY);
+                ctx.lineTo(pos.x, pos.y - rectangleH);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.strokeStyle = '#0000ff';
+                ctx.stroke();
+            }
         }
 
         function  down(e) {
@@ -119,6 +123,9 @@
                 setTimeout(function() {
                     ctx.clearRect(0, 0, w, h);
                 }, 300);
+                /**
+                 * 是否保存
+                 */
                 if(save || save === "true") {
                     var saveCanvas = document.createElement("canvas");
                     saveCanvas.setAttribute("id", "pre-canvas");
