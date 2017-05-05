@@ -1,20 +1,22 @@
-## screenshot  基于jquery的视频截图插件
+## screenshot 
 
-### 使用说明
+When watching movie in browser, you can use mouse and drag it on movies, it will draw a rectangular frame, and then you can save it, or upload to server to do something, for example, you can use the image which you draw to search the similar image.
+
+### how to use?
 ~~~javascript
  $("targetParentID").screenshot("targetID", "previewBoxID",  Boolean || string('true' / 'false'));
 ~~~
-### 参数说明
+### options
 
-> targetParentID: 截图目标父级ID
+> targetParentID: target's parent id
 
-> targetID: 截图目标ID
+> targetID: target's id
 
-> previewBoxID: 是否预览，若是，提供预览框ID，否则传入空字符串，预览框默认宽100px
+> previewBoxID: preview or not, if yes, fill prrview box' id
 
-> Boolean || string: 是否保存
+> Boolean || string: save or not
 
-### 示例
+### example
 ~~~javascript
  $("#box").screenshot("#target", "#show", true);
 ~~~
